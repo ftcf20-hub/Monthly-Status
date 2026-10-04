@@ -10,10 +10,11 @@
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #f8fafc; 
-            color: #0f172a;
+            background-color: #090d16; 
+            color: #f8fafc;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background-color 0.8s ease;
         }
 
         /* Ambient Lighting Mesh Glows */
@@ -24,42 +25,75 @@
             transform: translateX(-50%);
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
             z-index: 0;
             filter: blur(40px);
         }
 
+        .ambient-glow-2 {
+            position: fixed;
+            top: 250px;
+            right: -100px;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .bank-gradient { 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.2);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .bank-gradient::after {
             content: '';
             position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.2), transparent 60%);
-            pointer-events: none;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.8), transparent);
         }
 
-        /* Executive Glassmorphism */
+        /* Executive Glassmorphism Dark Card */
         .glass-card { 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .glass-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
-            border-color: rgba(16, 185, 129, 0.3);
-            background: #ffffff;
+            box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.5);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        /* Split 2-Tier Glass Card Style for Members */
+        .split-tier-card {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .split-tier-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(52, 211, 153, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .split-tier-card .bottom-tier {
+            background: rgba(15, 23, 42, 0.85);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         /* Progress Bar Animation */
@@ -67,9 +101,9 @@
             transition: width 1s ease-in-out;
         }
 
-        /* Shimmer Skeleton Loader */
+        /* Dark Shimmer Skeleton Loader */
         .skeleton {
-            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
         }
@@ -83,37 +117,42 @@
         .pulse-dot {
             width: 7px;
             height: 7px;
-            background-color: #10b981;
+            background-color: #34d399;
             border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
+            box-shadow: 0 0 10px #34d399;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.8); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
         }
+
+        /* Scrollbar Styling */
+        #member-list::-webkit-scrollbar { width: 4px; }
+        #member-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="pb-8 relative antialiased selection:bg-emerald-100">
+<body class="pb-8 relative antialiased selection:bg-emerald-900 selection:text-emerald-200">
 
     <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
 
     <main class="w-full max-w-md mx-auto px-4 pt-5 space-y-5 relative z-20">
 
         <!-- Top App Bar -->
         <header class="flex justify-between items-center px-1">
             <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-xl bg-slate-900 text-emerald-400 flex items-center justify-center font-black text-xs shadow-md border border-slate-700">
+                <div class="w-9 h-9 rounded-xl bg-slate-900 text-emerald-400 flex items-center justify-center font-black text-xs shadow-md border border-slate-700/80">
                     FT
                 </div>
                 <div>
-                    <h1 class="text-xs font-black uppercase tracking-wider text-slate-800">Family Trust</h1>
+                    <h1 class="text-xs font-black uppercase tracking-wider text-slate-100">Family Trust</h1>
                     <p class="text-[9px] font-bold text-slate-400">Secure Ledger</p>
                 </div>
             </div>
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[10px] font-bold text-slate-600">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/80 shadow-sm text-[10px] font-bold text-slate-300 backdrop-blur-md">
                 <span class="pulse-dot"></span> <span>Live Sync</span>
             </div>
         </header>
@@ -121,7 +160,7 @@
         <!-- Executive Hero Banner -->
         <div class="bank-gradient text-white p-6 rounded-3xl relative">
             <div class="flex justify-between items-start mb-4">
-                <span class="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 backdrop-blur-md">
+                <span class="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-300 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 backdrop-blur-md">
                     Rs. 500 / Member
                 </span>
                 <i class="fas fa-shield-halved text-slate-400 text-sm"></i>
@@ -129,7 +168,7 @@
             
             <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Monthly Collection</p>
             
-            <div class="mt-4 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-lg space-y-3">
+            <div class="mt-4 bg-slate-950/40 p-4 rounded-2xl border border-white/10 backdrop-blur-lg space-y-3">
                 <div class="flex justify-between items-end">
                     <div>
                         <p class="text-[9px] uppercase font-bold tracking-widest text-slate-400">Current Period</p>
@@ -149,7 +188,7 @@
                         <span class="text-slate-400 uppercase tracking-wider">Target Goal</span>
                         <span id="target-percent" class="text-emerald-400">0%</span>
                     </div>
-                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-white/10">
+                    <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-white/10">
                         <div id="progress-bar-fill" class="progress-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full w-0"></div>
                     </div>
                 </div>
@@ -158,23 +197,23 @@
 
         <!-- KPI Metrics Grid -->
         <div class="grid grid-cols-2 gap-3">
-            <div class="glass-card p-3.5 rounded-2xl flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs border border-emerald-100 shrink-0">
+            <div class="glass-card p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
+                <div class="w-9 h-9 rounded-xl bg-emerald-950/80 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-800/60 shrink-0">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div>
                     <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Paid Members</p>
-                    <p id="paid-count" class="text-sm font-extrabold text-slate-800">0</p>
+                    <p id="paid-count" class="text-sm font-extrabold text-slate-100">0</p>
                 </div>
             </div>
 
-            <div class="glass-card p-3.5 rounded-2xl flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs border border-rose-100 shrink-0">
+            <div class="glass-card p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
+                <div class="w-9 h-9 rounded-xl bg-rose-950/80 text-rose-400 flex items-center justify-center font-bold text-xs border border-rose-800/60 shrink-0">
                     <i class="fas fa-clock"></i>
                 </div>
                 <div>
                     <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Pending</p>
-                    <p id="unpaid-count" class="text-sm font-extrabold text-slate-800">0</p>
+                    <p id="unpaid-count" class="text-sm font-extrabold text-slate-100">0</p>
                 </div>
             </div>
         </div>
@@ -182,19 +221,19 @@
         <!-- Search & Filters -->
         <section class="space-y-3">
             <div class="flex justify-between items-center px-1">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Members Directory</h3>
-                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Live Status</span>
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Members Directory</h3>
+                <span class="text-[9px] font-bold text-emerald-400/80 uppercase tracking-wider">Live Status</span>
             </div>
 
             <div class="relative">
                 <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input type="text" id="searchInput" placeholder="Search member name..." 
-                       class="w-full pl-9 pr-4 py-2.5 rounded-2xl bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 shadow-sm transition-all">
+                       class="w-full pl-9 pr-4 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 shadow-inner transition-all">
             </div>
 
             <!-- Members List -->
             <div id="member-list" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
-                <div class="p-4 rounded-2xl bg-white border border-slate-100 flex items-center justify-between">
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full skeleton shrink-0"></div>
                         <div class="space-y-1">
@@ -211,7 +250,7 @@
         </section>
 
         <!-- Footer -->
-        <div class="text-center opacity-40 text-[9px] font-black uppercase tracking-[0.25em] pt-2 text-slate-400">
+        <div class="text-center opacity-40 text-[9px] font-black uppercase tracking-[0.25em] pt-2 text-slate-500">
             @FTCF2026 Founder Mughal Brothers
         </div>
     </main>
@@ -246,7 +285,7 @@
             let unpaidNum = 0;
             let totalMembers = 0;
 
-            rows.forEach(row => {
+            rows.forEach((row, idx) => {
                 if(!row.c[0]) return;
                 totalMembers++;
                 const name = row.c[0].v;
@@ -262,21 +301,34 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = "glass-card p-3 rounded-2xl flex items-center justify-between border border-slate-100";
+                card.className = "split-tier-card cursor-pointer group";
                 card.innerHTML = `
-                    <div class="flex items-center gap-3 min-w-0 pr-2">
-                        <div class="w-10 h-10 rounded-full bg-slate-900 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border border-slate-800">
-                            ${name.charAt(0)}
+                    <!-- Top Tier: Photo & Member Identity -->
+                    <div class="p-3 flex items-center justify-between">
+                        <div class="flex items-center gap-3 min-w-0 pr-2">
+                            <div class="relative shrink-0">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 text-emerald-400 flex items-center justify-center font-extrabold text-xs border border-slate-700 group-hover:border-emerald-400/80 transition-all shadow-md">
+                                    ${name.charAt(0)}
+                                </div>
+                                <span class="absolute -bottom-1 -right-1 text-[8px] font-black bg-slate-950 text-emerald-400 border border-emerald-500/30 px-1 rounded-md">
+                                    #${idx + 1}
+                                </span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-slate-100 text-xs truncate uppercase tracking-wide group-hover:text-emerald-300 transition-colors">${name}</h4>
+                                <p class="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Trust Member</p>
+                            </div>
                         </div>
-                        <div class="min-w-0">
-                            <h4 class="font-bold text-slate-800 text-xs truncate uppercase tracking-wide">${name}</h4>
-                            <p class="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Trust Member</p>
-                        </div>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <p class="font-black text-slate-900 text-xs">Rs. ${amount.toLocaleString()}</p>
-                        <span class="inline-block text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mt-0.5 ${isPaid ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}">
+                        <span class="inline-block text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider shrink-0 ${isPaid ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/60' : 'bg-rose-950/80 text-rose-400 border border-rose-800/60'}">
                             ${status}
+                        </span>
+                    </div>
+
+                    <!-- Bottom Tier: Amount & Details -->
+                    <div class="bottom-tier px-3.5 py-2 flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Monthly Amount</span>
+                        <span class="text-[12px] font-black text-emerald-400 tracking-tight">
+                            Rs. ${amount.toLocaleString()}
                         </span>
                     </div>
                 `;
@@ -301,10 +353,9 @@
             const term = e.target.value.toLowerCase();
             document.querySelectorAll('#member-list > div').forEach(card => {
                 const name = card.querySelector('h4').innerText.toLowerCase();
-                card.style.display = name.includes(term) ? 'flex' : 'none';
+                card.style.display = name.includes(term) ? 'block' : 'none';
             });
         });
     </script>
 </body>
-    </html>
-    
+</html>
